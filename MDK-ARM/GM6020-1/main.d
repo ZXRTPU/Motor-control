@@ -34,8 +34,7 @@ gm6020-1\main.o: ../Core/Inc/can.h
 gm6020-1\main.o: ../Core/Inc/dma.h
 gm6020-1\main.o: ../Core/Inc/usart.h
 gm6020-1\main.o: ../Core/Inc/gpio.h
-gm6020-1\main.o: ../Core/Inc/bsp_can.h
 gm6020-1\main.o: ../Core/Inc/chassis.h
 gm6020-1\main.o: ../Core/Inc/can_rtx.h
 gm6020-1\main.o: ../Core/Inc/chassis.h
-gm6020-1\main.o: ../Core/Inc/pid.h
+gm6020-1\main.o: ../Core/Inc/bsp_can.h

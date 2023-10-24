@@ -22,10 +22,9 @@
 #include "dma.h"
 #include "usart.h"
 #include "gpio.h"
-#include "bsp_can.h"
 #include "chassis.h"
+#include "bsp_can.h"
 #include "can_rtx.h"
-#include "pid.h"
 
 /* Private includes ----------------------------------------------------------*/
 /* USER CODE BEGIN Includes */
@@ -97,8 +96,15 @@ int main(void)
   MX_USART1_UART_Init();
   MX_USART3_UART_Init();
   MX_USART6_UART_Init();
+	
   /* USER CODE BEGIN 2 */
-
+	
+  //can_filter_init();
+	CAN1_Init();
+  CAN2_Init();
+	
+	motor_init();
+	
   /* USER CODE END 2 */
 
   /* Infinite loop */
@@ -106,8 +112,13 @@ int main(void)
   while (1)
   {
     /* USER CODE END WHILE */
-    motor_current_give_speed();
+    
     /* USER CODE BEGIN 3 */
+		
+		motor_current_give_speed();
+		//angle_control_2();
+		
+		
   }
   /* USER CODE END 3 */
 }
@@ -172,6 +183,7 @@ void Error_Handler(void)
   __disable_irq();
   while (1)
   {
+		
   }
   /* USER CODE END Error_Handler_Debug */
 }

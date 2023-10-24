@@ -391,6 +391,26 @@
           <GroupName>Application/User/Core</GroupName>
           <Files>
             <File>
+              <FileName>bsp_can.c</FileName>
+              <FileType>1</FileType>
+              <FilePath>..\Core\Src\bsp_can.c</FilePath>
+            </File>
+            <File>
+              <FileName>can_rtx.c</FileName>
+              <FileType>1</FileType>
+              <FilePath>..\Core\Src\can_rtx.c</FilePath>
+            </File>
+            <File>
+              <FileName>chassis.c</FileName>
+              <FileType>1</FileType>
+              <FilePath>..\Core\Src\chassis.c</FilePath>
+            </File>
+            <File>
+              <FileName>pid.c</FileName>
+              <FileType>1</FileType>
+              <FilePath>..\Core\Src\pid.c</FilePath>
+            </File>
+            <File>
               <FileName>main.c</FileName>
               <FileType>1</FileType>
               <FilePath>../Core/Src/main.c</FilePath>
@@ -424,26 +444,6 @@
               <FileName>stm32f4xx_hal_msp.c</FileName>
               <FileType>1</FileType>
               <FilePath>../Core/Src/stm32f4xx_hal_msp.c</FilePath>
-            </File>
-            <File>
-              <FileName>bsp_can.c</FileName>
-              <FileType>1</FileType>
-              <FilePath>..\Core\Src\bsp_can.c</FilePath>
-            </File>
-            <File>
-              <FileName>can_rtx.c</FileName>
-              <FileType>1</FileType>
-              <FilePath>..\Core\Src\can_rtx.c</FilePath>
-            </File>
-            <File>
-              <FileName>chassis.c</FileName>
-              <FileType>1</FileType>
-              <FilePath>..\Core\Src\chassis.c</FilePath>
-            </File>
-            <File>
-              <FileName>pid.c</FileName>
-              <FileType>1</FileType>
-              <FilePath>..\Core\Src\pid.c</FilePath>
             </File>
           </Files>
         </Group>

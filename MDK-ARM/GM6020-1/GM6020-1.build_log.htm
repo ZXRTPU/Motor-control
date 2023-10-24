@@ -22,12 +22,33 @@ Dialog DLL:      TCM.DLL V1.32.0.0
  
 <h2>Project:</h2>
 E:\ARobomaster\CQU-motor-study\GM6020\GM6020-1\MDK-ARM\GM6020-1.uvprojx
-Project File Date:  10/22/2023
+Project File Date:  10/23/2023
 
 <h2>Output:</h2>
 *** Using Compiler 'V5.06 update 5 (build 528)', folder: 'D:\Keil-APPINSTALL\ARM\ARMCC\Bin'
 Build target 'GM6020-1'
-"GM6020-1\GM6020-1.axf" - 0 Error(s), 0 Warning(s).
+compiling main.c...
+../Core/Inc/chassis.h(32): warning:  #1-D: last line of file ends without a newline
+  #endif
+../Core/Inc/can_rtx.h(13): warning:  #1-D: last line of file ends without a newline
+  #endif
+../Core/Inc/chassis.h(21): warning:  #1295-D: Deprecated declaration motor_current_give_speed - give arg types
+  void motor_current_give_speed();
+../Core/Inc/chassis.h(23): warning:  #1295-D: Deprecated declaration motor_current_give_angle - give arg types
+  void motor_current_give_angle();
+../Core/Inc/chassis.h(26): warning:  #1295-D: Deprecated declaration motor_init - give arg types
+  void motor_init();
+../Core/Inc/chassis.h(28): warning:  #1295-D: Deprecated declaration err_angle - give arg types
+  void err_angle();
+../Core/Inc/chassis.h(30): warning:  #1295-D: Deprecated declaration angle_control_2 - give arg types
+  void angle_control_2();
+../Core/Inc/chassis.h(32): warning:  #1-D: last line of file ends without a newline
+  #endif
+../Core/Src/main.c: 8 warnings, 0 errors
+linking...
+Program Size: Code=9506 RO-data=458 RW-data=76 ZI-data=2644  
+FromELF: creating hex file...
+"GM6020-1\GM6020-1.axf" - 0 Error(s), 8 Warning(s).
 
 <h2>Software Packages used:</h2>
 
@@ -51,7 +72,7 @@ Package Vendor: Keil
 
    * Component: ARM::CMSIS:CORE:5.6.0
       Include file:  CMSIS\Core\Include\tz_context.h
-Build Time Elapsed:  00:00:01
+Build Time Elapsed:  00:00:02
 </pre>
 </body>
 </html>

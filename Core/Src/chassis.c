@@ -7,7 +7,7 @@
 motor_info_t  motor;//拨盘电机结构体
 
 //设置电机的目标速度和目标角度
-int16_t speed_target=500;
+int16_t speed_target=1000;
 int16_t angle_target=30;
 
 //映射电机目前的角度值
@@ -18,10 +18,8 @@ int16_t now_angle=0;
 pid_struct_t  motor_pid_speed;
 pid_struct_t  motor_pid_angle;
 
-//int16_t current=0;
-
-fp32 pid_speed[3]={30,0.5,15};
-fp32 pid_angle[3]={400,0,0};
+fp32 pid_speed[3]={3,0.5,0};
+fp32 pid_angle[3]={20,0,0};
 
 
 //====================================控制GM6020的代码=====================================
@@ -105,7 +103,6 @@ int count=0;
 
 uint16_t encoder_zero(uint16_t n)
 {
-	
 	if(n>k+4096)
 	{
 		n=n-8192;
@@ -126,10 +123,12 @@ uint16_t encoder_zero(uint16_t n)
 	return n;
 }
 
+int flag=0;
+
 //===============速度环发送电流
 void motor_current_give_speed()
 {
-		pid_init(&motor_pid_speed,pid_speed,1000,1000); //速度pid初始化
+		pid_init(&motor_pid_speed,pid_speed,10000,10000); //速度pid初始化
 		
 		if(motor.rotor_speed>=speed_target) //pid限幅
 		{
@@ -140,9 +139,10 @@ void motor_current_give_speed()
 		
 		motor.set_current=pid_calc(&motor_pid_speed,motor.rotor_speed,speed_target); //pid输出值，及CAN线发送给电机的控制值
 		                                                                             //将电流pid输出控制值赋给电机控制结构体
-	
 	//通过CAN线发送电流
 	 set_motor_current_can2(0,motor.set_current,motor.set_current,motor.set_current,motor.set_current);
+	
+	flag++;
 }
 	
 
@@ -150,13 +150,13 @@ void motor_current_give_speed()
 void motor_current_give_angle()
 {
 	  pid_init(&motor_pid_speed,pid_speed,30000,30000); //速度pid初始化
-	  pid_init(&motor_pid_speed,pid_angle,0,320); //角度pid初始化
+	  pid_init(&motor_pid_speed,pid_angle,0,360); //角度pid初始化
 	
 	  //整定编码器目前的反馈值
 	  now_encoder_angle=encoder_zero(motor.rotor_angle);
 	
     //计算当前的编码器角度值，运用msp函数将编码器的值映射为弧度制
-		now_angle=msp(now_encoder_angle,0,8191,0,360);
+		now_angle=msp(now_encoder_angle,0,8192,0,360);
 	
 	  angle_target=now_angle+angle_target;
 	
@@ -170,6 +170,78 @@ void motor_current_give_angle()
 		
 		set_motor_current_can2(0,motor.set_current,motor.set_current,motor.set_current,motor.set_current);
 } 
+
+/*
+void angle_control_2(double angle)
+{
+	target_angle_trigger=motor.rotor_angle-angle/360.0*8191;
+	
+	if(target_angle_trigger>8191)
+	{
+		target_angle_trigger-=8191;
+	}
+	else if(target_angle_trigger<0)
+	{
+		target_angle_trigger += 8191;
+	}
+	
+	target_omega_trigger=pid_pitch_calc(&motor_pid[2],target_angle_trigger,motor_info[2].rotor_angle);
+	
+	motor_info[2].set_voltage = pid_calc(&motor_pid[2],target_omega_trigger, motor_info[2].rotor_speed);
+}
+*/
+
+//===========================最新控制代码====================================
+float Now_angle=0.0f;   //由编码器映射出的角度值
+float delta_angle=0.0f;
+uint16_t target_angle_trigger;
+uint16_t target_omega_trigger;
+
+
+void motor_init()
+{
+	pid_init(&motor_pid_angle,pid_angle,16384,16384);
+	pid_init(&motor_pid_speed,pid_speed,16384,16384);
+	
+	motor.last_angle=motor.rotor_angle;
+}
+
+void err_angle()
+{
+	delta_angle=motor.rotor_angle-motor.last_angle;
+	motor.last_angle=motor.rotor_angle;
+	
+	if(delta_angle>8191/2)
+	{
+		delta_angle-=8191;
+	}
+	else if(delta_angle<-8191/2) 
+	{
+		delta_angle+= 8191;
+	}
+	
+	delta_angle/=36;
+	
+	Now_angle+=delta_angle;
+	
+	if(Now_angle>8191)
+	{
+		Now_angle-=8191;
+	}
+	else if(Now_angle<0)
+	{
+		Now_angle+=8191;
+	}
+}
+
+void angle_control_2()
+{		
+	err_angle();
+	
+	target_omega_trigger=pid_pitch_calc(&motor_pid_angle,target_angle_trigger,Now_angle);
+	
+	motor.set_current= pid_calc(&motor_pid_speed,target_omega_trigger, motor.rotor_speed);
+}
 
 
 //=========================控制M2006或M3508的代码=============================

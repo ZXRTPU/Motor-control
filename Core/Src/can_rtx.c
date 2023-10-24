@@ -6,6 +6,47 @@ extern CAN_HandleTypeDef hcan2;
 extern motor_info_t  motor;
 uint16_t can_cnt_1=0;
 
+void CAN1_Init(void)
+{
+    CAN_FilterTypeDef  can_filter;
+
+    can_filter.FilterBank = 0;                       // filter 0
+    can_filter.FilterMode =  CAN_FILTERMODE_IDMASK;  // ±Í ∂∑˚∆¡±ŒŒªƒ£ Ω
+    can_filter.FilterScale = CAN_FILTERSCALE_32BIT;		//π˝¬À∆˜ŒªøÌŒ™µ•∏ˆ32Œª
+    can_filter.FilterIdHigh = 0;//±Í ∂∑˚ºƒ¥Ê∆˜ 
+    can_filter.FilterIdLow  = 0;//±Í ∂∑˚ºƒ¥Ê∆˜ 
+    can_filter.FilterMaskIdHigh = 0;//∆¡±Œºƒ¥Ê∆˜
+    can_filter.FilterMaskIdLow  = 0;       //∆¡±Œºƒ¥Ê∆˜   set mask 0 to receive all can id
+    can_filter.FilterFIFOAssignment = CAN_RX_FIFO0; // assign to fifo0£¨Ω” ’∆˜ «FIFO0
+    can_filter.FilterActivation = ENABLE;           // enable can filter
+    can_filter.SlaveStartFilterBank  = 14;          
+   
+    HAL_CAN_ConfigFilter(&hcan1, &can_filter);        // init can filter
+    HAL_CAN_ActivateNotification(&hcan1,CAN_IT_RX_FIFO0_MSG_PENDING);		// πƒ‹canµƒFIFO0÷–∂œ
+    HAL_CAN_Start(&hcan1);//∆Ù∂Øcan1
+
+}
+
+void CAN2_Init( void )
+{
+    CAN_FilterTypeDef  can_filter;
+
+    can_filter.FilterBank = 14;                       // filter 14
+    can_filter.FilterMode =  CAN_FILTERMODE_IDMASK;  // ±Í ∂∑˚∆¡±ŒŒªƒ£ Ω
+    can_filter.FilterScale = CAN_FILTERSCALE_32BIT;		//π˝¬À∆˜ŒªøÌŒ™µ•∏ˆ32Œª
+    can_filter.FilterIdHigh = 0;//±Í ∂∑˚ºƒ¥Ê∆˜ 
+    can_filter.FilterIdLow  = 0;//±Í ∂∑˚ºƒ¥Ê∆˜ 
+    can_filter.FilterMaskIdHigh = 0;//∆¡±Œºƒ¥Ê∆˜
+    can_filter.FilterMaskIdLow  = 0;       //∆¡±Œºƒ¥Ê∆˜   set mask 0 to receive all can id
+    can_filter.FilterFIFOAssignment = CAN_RX_FIFO0; // assign to fifo0£¨Ω” ’∆˜ «FIFO0
+    can_filter.FilterActivation = ENABLE;           // enable can filter
+    can_filter.SlaveStartFilterBank  = 14;         
+   
+    HAL_CAN_ConfigFilter(&hcan2, &can_filter);        // init can filter
+   	HAL_CAN_ActivateNotification(&hcan2,CAN_IT_RX_FIFO0_MSG_PENDING);
+	  HAL_CAN_Start(&hcan2);//∆Ù∂Øcan2
+}
+
 //============================CAN∑¢ÀÕøÿ÷∆µÁª˙µƒ ˝æ›£®µÁ¡˜£©==========================================
 void set_motor_current_can2(uint8_t id_range, int16_t v1, int16_t v2, int16_t v3, int16_t v4)
 {
@@ -26,7 +67,7 @@ void set_motor_current_can2(uint8_t id_range, int16_t v1, int16_t v2, int16_t v3
   tx_data[5] =    (v3)&0xff;
   tx_data[6] = (v4>>8)&0xff;
   tx_data[7] =    (v4)&0xff;
-  HAL_CAN_AddTxMessage(&hcan2, &tx_header, tx_data,(uint32_t*)CAN_TX_MAILBOX0);
+  HAL_CAN_AddTxMessage(&hcan1, &tx_header, tx_data,(uint32_t*)CAN_TX_MAILBOX0);
 }
 
 //=================================CANœﬂΩ” ‹µÁª˙–≈œ¢===============================================
@@ -37,6 +78,7 @@ void HAL_CAN_RxFifo0MsgPendingCallback(CAN_HandleTypeDef *hcan)//Ω” ‹÷–∂œªÿµ˜∫Ø 
 {
   CAN_RxHeaderTypeDef rx_header;
 
+	/*
   if(hcan->Instance == CAN1)
   {
      uint8_t rx_data[8];
@@ -47,10 +89,10 @@ void HAL_CAN_RxFifo0MsgPendingCallback(CAN_HandleTypeDef *hcan)//Ω” ‹÷–∂œªÿµ˜∫Ø 
 		} 
 
 
-  }
+  }*/
 	
 	//µÁª˙–≈œ¢Ω” ’
-	 if(hcan->Instance == CAN2)
+	 if(hcan->Instance == CAN1)
   {		
 		uint8_t             rx_data[8];
     HAL_CAN_GetRxMessage(hcan, CAN_RX_FIFO0, &rx_header, rx_data); //receive can2 data
@@ -68,11 +110,11 @@ void HAL_CAN_RxFifo0MsgPendingCallback(CAN_HandleTypeDef *hcan)//Ω” ‹÷–∂œªÿµ˜∫Ø 
 		
 		 }
 		 
-		 count++;
+		 /*count++;
 	   if(count==1)
 		 {
 			 k=motor.rotor_angle;
-		 }
+		 }*/
 	}
 
 }

@@ -28,8 +28,10 @@ typedef struct
 extern void pid_init(pid_struct_t *pid, 
   fp32 PID[3], fp32 max_out, fp32 max_iout);
 
-
 extern fp32 pid_calc(pid_struct_t *pid, fp32 ref, fp32 set);
+
+extern float pid_pitch_calc(pid_struct_t *pid, float ref, float fdb);
+
 
 
 
